@@ -33,6 +33,7 @@ uploadArchives {
         }
     }
 }
+
 dependencies {
     implementation 'net.dv8tion:JDA:4.2.0_227'
     implementation 'org.apache.cassandra:cassandra-all:0.8.1'
@@ -57,6 +58,6 @@ publishing {
 }
 jar {
     manifest {
-        attributes "Main-Class": "bot.Bot"
+        attributes 'Main-Class': 'bot.Bot'
     }
 }
