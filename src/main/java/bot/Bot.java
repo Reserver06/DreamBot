@@ -23,6 +23,8 @@ public class Bot {
         builder.addEventListeners(new Loot());
         builder.addEventListeners(new LootList());
         builder.addEventListeners(new NoUReader());
+        builder.addEventListeners(new Ping());
+        builder.addEventListeners(new Incoming());
         //GatewayIntent for event etc.
         for(final GatewayIntent gatewayIntent : GatewayIntent.values()){
             builder.enableIntents(gatewayIntent);

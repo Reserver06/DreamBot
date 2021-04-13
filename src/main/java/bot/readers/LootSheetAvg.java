@@ -12,7 +12,7 @@ import java.util.List;
 public class LootSheetAvg extends LootSheet {
     public static void main(String[] args) throws IOException, GeneralSecurityException {
         Sheets sheetsService = getSheetsService();
-        String rangeAvg = "Loot!N2:N75";
+        String rangeAvg = "Loot!M2:M75";
         String names = "Loot!A2:A75";
         File avg = new File("averages.txt");
         PrintStream averages = new PrintStream(avg);

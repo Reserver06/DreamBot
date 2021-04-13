@@ -4,6 +4,7 @@ package bot.commands;
 import bot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -13,7 +14,7 @@ public class Clear extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
-        if(args[0].equalsIgnoreCase(Bot.prefix + "clear")){
+        if(args[0].equalsIgnoreCase(Bot.prefix + "clear")&& isAdmin(event)){
             if(args.length<2){
                 EmbedBuilder usage = new EmbedBuilder();
                 usage.setColor(0xf70505);
@@ -60,7 +61,26 @@ public class Clear extends ListenerAdapter {
                }
             }
         }
+        if(args[0].equalsIgnoreCase(Bot.prefix + "clear")&& !isAdmin(event)){
+            EmbedBuilder illegal = new EmbedBuilder();
+            illegal.setColor(0xf70505);
+            illegal.setTitle("You cannot use this command");
+            illegal.setDescription("Must have role: 'Admin'");
+            event.getChannel().sendMessage(illegal.build()).queue();
+        }
     }
-
+    public boolean isAdmin(GuildMessageReceivedEvent event) {
+        boolean isAdmin=false;
+        try {
+            List<Role> member = event.getMember().getRoles();
+        for(Role role:member)
+            if(role.getName().compareTo("Admin")==0) {
+                isAdmin = true;
+            }
+        }catch(NullPointerException e) {
+            System.err.println("User has no roles");
+        }
+        return isAdmin;
+    }
 }
 

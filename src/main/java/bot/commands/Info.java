@@ -9,9 +9,10 @@ public class Info extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         String[] args = event.getMessage().getContentRaw().split("\\s+");
         String list = "<:white_small_square:827279848853733406>~loot [name] - Displays most recent loot information.\n" +
-                "<:white_small_square:827279848853733406>~lootList - Displays alliance weekly loot info\n" +
+                "<:white_small_square:827279848853733406>~lootList - Displays alliance weekly loot info.\n" +
                 "<:white_small_square:827279848853733406>~clear [amount] - Deletes messages specified.\n"+
-                "<:white_small_square:827279848853733406>~info - Displays the info you are currently reading";
+                "<:white_small_square:827279848853733406>~info - Displays the info you are currently reading.\n"+
+                "<:white_small_square:827279848853733406>~ping [@Discord_User] - Will ping the specified user x10.\n";
 
         if(args[0].equalsIgnoreCase(Bot.prefix + "info")){
             EmbedBuilder info = new EmbedBuilder();

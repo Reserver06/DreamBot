@@ -29,13 +29,14 @@ public class LootList extends ListenerAdapter {
             list.setColor(0x00ff08);
             list.addField("*<:fireworks:827276473026215976>Top Looter<:fireworks:827276473026215976>*", members.get(0).toString(), false);
             list.addField("The Next Five:", getTopFive(members), false);
-            list.addField("Honorable Mentions:", honorableMentions(members), false);
+            list.addField("Honorable Mentions:", honorableMentions(members), true);
             list.addField("Stats:", stats(members, f), false);
             list.setFooter("\nShoutout to Maz for doing loot!");
 
             event.getChannel().sendTyping().queue();
             event.getChannel().sendMessage(list.build()).queue();
             list.clear();
+            members.clear();
         }
     }
     //File reader
