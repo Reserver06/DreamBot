@@ -20,9 +20,9 @@ repositories {
 
 dependencies {
     implementation 'net.dv8tion:JDA:4.2.1_255'
-    compile 'com.google.api-client:google-api-client:1.30.4'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.30.6'
-    compile 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
+    implementation 'com.google.api-client:google-api-client:1.30.4'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.30.6'
+    implementation 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
     implementation 'org.apache.cassandra:cassandra-all:0.8.1'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
