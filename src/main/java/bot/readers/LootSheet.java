@@ -11,6 +11,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
@@ -18,8 +19,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class LootSheet {
-    protected static final String APPLICATION_NAME = "DT LOOT SHEET";
-    protected static final String SPREADSHEET_ID = "1Vq9IxDENgafHgeEQOFGXbeoFQfMxg5Q44wQ5hivepxs";
+    protected static Dotenv dotenv = Dotenv.load();
+    protected static final String APPLICATION_NAME = dotenv.get("APPLICATION_NAME_LOOT") ;
+    protected static final String SPREADSHEET_ID = dotenv.get("SPREADSHEET_ID_LOOT");
 
     protected static Credential authorize() throws IOException, GeneralSecurityException {
         InputStream in = LootSheet.class.getResourceAsStream("/credentials.json");

@@ -14,7 +14,8 @@ public class Info extends ListenerAdapter {
                 "<:white_small_square:827279848853733406>~info - Displays the info you are currently reading.\n"+
                 "<:white_small_square:827279848853733406>~ping [@Discord_User] - Will ping the specified user x10.\n"+
                 "<:white_small_square:827279848853733406>~incoming [Player_Name] [Time Until Landing] [Optional Notes] - Sends an SMS to the specified " +
-                "player if a number was provided.";
+                "player if a number was provided.\n"+
+                "<:white_small_square:827279848853733406>~incoming call [Player_Name] [Time Until Landing] - Places a call to the specified player";
 
         if(args[0].equalsIgnoreCase(Bot.prefix + "info")){
             EmbedBuilder info = new EmbedBuilder();

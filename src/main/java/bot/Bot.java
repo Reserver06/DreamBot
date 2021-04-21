@@ -1,6 +1,7 @@
 package bot;
 
 import bot.commands.*;
+import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -12,7 +13,8 @@ public class Bot {
     public static String prefix = "~";
 
     public static void main(String[] args) throws LoginException {
-        final JDABuilder builder = JDABuilder.createDefault("ODA4MzY0MTk1Njk5NDkwODc3.YCFd0g.tmsWKufkdGiQhQPnBuFk2zBR4jM");
+        Dotenv dotenv = Dotenv.load();
+        final JDABuilder builder = JDABuilder.createDefault(dotenv.get("DISCORD_TOKEN"));
         builder.setAutoReconnect(true);
         builder.setActivity(Activity.playing("Goodgame Empire"));
         builder.setStatus(OnlineStatus.ONLINE);
@@ -25,6 +27,7 @@ public class Bot {
         builder.addEventListeners(new NoUReader());
         builder.addEventListeners(new Ping());
         builder.addEventListeners(new Incoming());
+
         //GatewayIntent for event etc.
         for(final GatewayIntent gatewayIntent : GatewayIntent.values()){
             builder.enableIntents(gatewayIntent);
