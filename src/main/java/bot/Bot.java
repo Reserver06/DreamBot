@@ -13,7 +13,11 @@ public class Bot {
     public static String prefix = "~";
 
     public static void main(String[] args) throws LoginException {
-        Dotenv dotenv = Dotenv.load();
+        Dotenv dotenv = Dotenv.configure()
+                .directory("./.env")
+                .ignoreIfMalformed()
+                .ignoreIfMissing()
+                .load();
         final JDABuilder builder = JDABuilder.createDefault(dotenv.get("DISCORD_TOKEN"));
         builder.setAutoReconnect(true);
         builder.setActivity(Activity.playing("Goodgame Empire"));
