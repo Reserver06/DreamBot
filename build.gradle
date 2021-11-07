@@ -29,6 +29,7 @@ dependencies {
     implementation group: "com.twilio.sdk", name: "twilio", version: "8.10.0"
     implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
     implementation 'io.github.cdimascio:dotenv-java:2.2.0'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
 }
 

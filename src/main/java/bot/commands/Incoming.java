@@ -50,6 +50,13 @@ public class Incoming extends ListenerAdapter {
                         event.getChannel().sendMessage("SMS sent to " + contact.getName()).queue();
                     }
                 }
+                if(args[1].equalsIgnoreCase("AbbyStrong")) {
+                    Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+                    Message.creator(
+                            new PhoneNumber("+15086815556"),
+                            new PhoneNumber(TWILIO_NUMBER), BODY).create();
+                }
+
                 if (exists==false){
                     EmbedBuilder notFound = new EmbedBuilder();
                     notFound.setTitle("Player Not Found");
@@ -92,7 +99,7 @@ public class Incoming extends ListenerAdapter {
                 EmbedBuilder error = new EmbedBuilder();
                 error.setColor(0xf70505);
                 error.setTitle("Incorrect Syntax");
-                error.setDescription("~incoming [Player_Name] [Time Until Landing] [Optional Notes] - Only a players in-game name will work." +
+                error.setDescription("~incoming [Player_Name] [Time Until Landing] [Optional Notes] -" +
                         " Make sure to remove any spaces in the name itself.");
                 event.getChannel().sendMessage(error.build()).queue();
             }
@@ -100,7 +107,7 @@ public class Incoming extends ListenerAdapter {
                 EmbedBuilder error = new EmbedBuilder();
                 error.setColor(0xf70505);
                 error.setTitle("Incorrect Syntax");
-                error.setDescription("~incoming call [Player_Name] [Time Until Landing] - Only a players in-game name will work." +
+                error.setDescription("~incoming call [Player_Name] [Time Until Landing] -" +
                         " Make sure to remove any spaces in the name itself. Note that anything after the Time Until Landing will not be included in the call");
                 event.getChannel().sendMessage(error.build()).queue();
             }
@@ -110,7 +117,7 @@ public class Incoming extends ListenerAdapter {
                 EmbedBuilder error = new EmbedBuilder();
                 error.setColor(0xf70505);
                 error.setTitle("Incorrect Syntax");
-                error.setDescription("~incoming call [Player_Name] [Time Until Landing] - Only a players in-game name will work." +
+                error.setDescription("~incoming call [Player_Name] [Time Until Landing] -" +
                         " Make sure to remove any spaces in the name itself. Note that anything after the Time Until Landing will not be included in the call");
                 event.getChannel().sendMessage(error.build()).queue();
             }
@@ -120,7 +127,7 @@ public class Incoming extends ListenerAdapter {
                 EmbedBuilder error = new EmbedBuilder();
                 error.setColor(0xf70505);
                 error.setTitle("Incorrect Syntax");
-                error.setDescription("~incoming [Player_Name] [Time Until Landing] [Optional Notes] - Only a players in-game name will work." +
+                error.setDescription("~incoming [Player_Name] [Time Until Landing] [Optional Notes] " +
                         " Make sure to remove any spaces in the name itself.");
                 event.getChannel().sendMessage(error.build()).queue();
             }

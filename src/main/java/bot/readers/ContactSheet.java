@@ -28,6 +28,7 @@ public class ContactSheet {
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
                 JacksonFactory.getDefaultInstance(),new InputStreamReader(in));
 
+
         List<String> scopes = Collections.singletonList(SheetsScopes.SPREADSHEETS);
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),JacksonFactory.getDefaultInstance(),
@@ -48,7 +49,7 @@ public class ContactSheet {
     }
     public static void main(String[] args) throws IOException, GeneralSecurityException {
         Sheets sheetsService = getSheetsService();
-        String range = "Sheet1!A2:B70";
+        String range = "Sheet1!A2:B150";
         File file = new File("contacts.txt");
         PrintStream contacts = new PrintStream(file);
 

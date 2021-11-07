@@ -28,6 +28,10 @@ public class LootSheet {
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
                 JacksonFactory.getDefaultInstance(),new InputStreamReader(in));
 
+        final java.util.logging.Logger buggyLogger = java.util.logging.Logger.getLogger(FileDataStoreFactory.class.getName());
+        buggyLogger.setLevel(java.util.logging.Level.SEVERE);
+
+
         List<String> scopes = Collections.singletonList(SheetsScopes.SPREADSHEETS);
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),JacksonFactory.getDefaultInstance(),
