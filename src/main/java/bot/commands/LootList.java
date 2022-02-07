@@ -1,37 +1,36 @@
 package bot.commands;
 
 import bot.Bot;
-import bot.readers.LootSheet;
 import bot.Player;
+import bot.readers.Database;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LootList extends ListenerAdapter {
-    protected final DecimalFormat f = new DecimalFormat("###,###,###");
-    protected final ArrayList<Player> members = new ArrayList<>();
+    private final DecimalFormat f = new DecimalFormat("###,###,###");
+    private Map<String,Player> members = new HashMap<>();
 
-    //Reads messages in chat and handles ~lootlist command
+    //Read messages in chat and handle ~lootlist command
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
         if (args[0].equalsIgnoreCase(Bot.prefix + "lootList")) {
-            readFile(members);
+            readData();
             EmbedBuilder list = new EmbedBuilder();
             list.setTitle("This Week's Loot");
             list.setColor(0x00ff08);
-            list.addField("*<:fireworks:827276473026215976>Top Looter<:fireworks:827276473026215976>*", members.get(0).toString(), false);
+            list.addField("*<:fireworks:827276473026215976>Top Looter<:fireworks:827276473026215976>*", getFirst(members), false);
             list.addField("The Next Five:", getTopFive(members), false);
             list.addField("Honorable Mentions:", honorableMentions(members), true);
             list.addField("Stats:", stats(members, f), false);
-            list.setFooter("\nShoutout to Maz for doing loot!");
+            list.setFooter("\nLoot stats are refreshed automatically every 30min");
 
             event.getChannel().sendTyping().queue();
             event.getChannel().sendMessage(list.build()).queue();
@@ -39,42 +38,51 @@ public class LootList extends ListenerAdapter {
             members.clear();
         }
     }
-    //File reader
-    private void readFile(ArrayList<Player> members) {
-        try{
-            LootSheet.main(null);
-            Scanner sc = new Scanner(new File("numbers.txt"));
-            while (sc.hasNext()) {
-                String name = sc.next();
-                int total = sc.nextInt();
-                members.add(new Player(name, total));
-            }
-        } catch (IOException | GeneralSecurityException e) {
-            System.err.println("File was not found");
-        }
+    //Database reader
+    private void readData() {
+        Database data = new Database();
+        members = data.readData(members);
     }
-
+    //Returns toString of Player with the highest loot score
+    private static String getFirst(Map<String,Player> members){
+        long highest = -1;
+        Player top = null;
+        for(Player player : members.values())
+            if(player.getLoot()>highest) {
+                highest = player.getLoot();
+                top = player;
+            }
+        assert top != null;
+        return top.toString();
+    }
     //Returns the next top 5 loot scores after the first.
-    private static String getTopFive(ArrayList<Player> members){
+    private static String getTopFive(Map<String,Player> members){
+        ArrayList<Player> players= new ArrayList<>(members.values());
+        Collections.sort(players);
+
         StringBuilder total = new StringBuilder();
-        for(int i=1;i<6;i++)
-            total.append("<:white_small_square:827279848853733406>").append(members.get(i).toString()).append("\n");
+        for (int i=1; i<6;i++) {
+            total.append("<:white_small_square:827279848853733406>").append(players.get(i).toString()).append("\n");
+        }
         return total.toString();
     }
-    //Returns players who's loot exceeded 30mil (weekly)
-    private static String honorableMentions(ArrayList<Player> members) {
+    //Returns players whose loot exceeded 30mil (weekly)
+    private static String honorableMentions(Map<String,Player> members) {
+        ArrayList<Player> players= new ArrayList<>(members.values());
+        Collections.sort(players);
+
         StringBuilder total = new StringBuilder();
-        for (int i = 6; i < members.size(); i++) {
-            if (members.get(i).getLoot() >= 30000000)
-                total.append("<:white_small_square:827279848853733406>").append(members.get(i).toString()).append("\n");
+        for (int i=6;i< players.size();i++) {
+            if (players.get(i).getLoot() >= 30000000)
+                total.append("<:white_small_square:827279848853733406>").append(players.get(i).toString()).append("\n");
         }
         return total.toString();
     }
     //Returns Loot Goal, # who reached the goal, and the alliance weekly average
-    private static String stats(ArrayList<Player> members, DecimalFormat f){
+    private static String stats(Map<String,Player> members, DecimalFormat f){
         String total = "Loot Goal: 15mil";
         int made=0;
-        for (Player member : members) {
+        for (Player member : members.values()) {
             if (member.getLoot() >= 15000000)
                 made++;
         }
@@ -83,10 +91,10 @@ public class LootList extends ListenerAdapter {
         return total;
     }
     //Returns average of alliance loot for the week
-    private static String getAverage(ArrayList<Player> members, DecimalFormat f) {
-        int total = 0;
+    private static String getAverage(Map<String,Player> members, DecimalFormat f) {
+        long total = 0;
 
-        for (Player member : members) {
+        for (Player member : members.values()) {
             total += member.getLoot();
         }
         return f.format(total / members.size());

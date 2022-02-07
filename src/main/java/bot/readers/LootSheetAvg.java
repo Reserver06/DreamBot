@@ -1,5 +1,6 @@
 package bot.readers;
 
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
@@ -16,6 +17,9 @@ public class LootSheetAvg extends LootSheet {
         String names = "Loot!A2:A75";
         File avg = new File("averages.txt");
         PrintStream averages = new PrintStream(avg);
+
+        final java.util.logging.Logger buggyLogger = java.util.logging.Logger.getLogger(FileDataStoreFactory.class.getName());
+        buggyLogger.setLevel(java.util.logging.Level.SEVERE);
 
         ValueRange responseAvg = sheetsService.spreadsheets().values()
                 .get(SPREADSHEET_ID,rangeAvg)

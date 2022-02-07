@@ -31,6 +31,8 @@ public class Bot {
         builder.addEventListeners(new NoUReader());
         builder.addEventListeners(new Ping());
         builder.addEventListeners(new Incoming());
+        builder.addEventListeners(new ReactRole());
+        builder.addEventListeners(new Add());
 
         //GatewayIntent for event etc.
         for(final GatewayIntent gatewayIntent : GatewayIntent.values()){

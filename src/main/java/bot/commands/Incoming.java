@@ -28,15 +28,19 @@ public class Incoming extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         String[] args = event.getMessage().getContentRaw().split("\\s+");
         ArrayList<Contacts> contacts = new ArrayList<>();
-        boolean exists =false;
+        boolean exists = false;
 
+        // If a good call
         if (args[0].equalsIgnoreCase(Bot.prefix + "incoming") && args.length >=3) {
             StringBuilder concat= new StringBuilder();
+
             for(int i=2;i<args.length;i++)
                 concat.append(args[i]).append(" ");
+
             String BODY = "DreamBot: incoming,  "+ concat;
             readFile(contacts);
 
+            //While the command didn't contain "call"
             if(!args[1].equalsIgnoreCase("call")){
 
                 for (Contacts contact : contacts) {
@@ -50,7 +54,8 @@ public class Incoming extends ListenerAdapter {
                         event.getChannel().sendMessage("SMS sent to " + contact.getName()).queue();
                     }
                 }
-                if (exists==false){
+
+                if (!exists){
                     EmbedBuilder notFound = new EmbedBuilder();
                     notFound.setTitle("Player Not Found");
                     notFound.setDescription("There is no number associated with the player: "+args[1]);
@@ -75,7 +80,7 @@ public class Incoming extends ListenerAdapter {
                         event.getChannel().sendMessage("Calling " + contacts1.getName()).queue();
                     }
                 }
-                if (exists==false){
+                if (!exists){
                     EmbedBuilder notFound = new EmbedBuilder();
                     notFound.setTitle("Player Not Found");
                     notFound.setDescription("There is no number associated with the player: "+args[2]);
@@ -92,7 +97,7 @@ public class Incoming extends ListenerAdapter {
                 EmbedBuilder error = new EmbedBuilder();
                 error.setColor(0xf70505);
                 error.setTitle("Incorrect Syntax");
-                error.setDescription("~incoming [Player_Name] [Time Until Landing] [Optional Notes] - Only a players in-game name will work." +
+                error.setDescription("~incoming [Player_Name] [Time Until Landing] [Optional Notes] -" +
                         " Make sure to remove any spaces in the name itself.");
                 event.getChannel().sendMessage(error.build()).queue();
             }
@@ -100,7 +105,7 @@ public class Incoming extends ListenerAdapter {
                 EmbedBuilder error = new EmbedBuilder();
                 error.setColor(0xf70505);
                 error.setTitle("Incorrect Syntax");
-                error.setDescription("~incoming call [Player_Name] [Time Until Landing] - Only a players in-game name will work." +
+                error.setDescription("~incoming call [Player_Name] [Time Until Landing] -" +
                         " Make sure to remove any spaces in the name itself. Note that anything after the Time Until Landing will not be included in the call");
                 event.getChannel().sendMessage(error.build()).queue();
             }
@@ -110,7 +115,7 @@ public class Incoming extends ListenerAdapter {
                 EmbedBuilder error = new EmbedBuilder();
                 error.setColor(0xf70505);
                 error.setTitle("Incorrect Syntax");
-                error.setDescription("~incoming call [Player_Name] [Time Until Landing] - Only a players in-game name will work." +
+                error.setDescription("~incoming call [Player_Name] [Time Until Landing] -" +
                         " Make sure to remove any spaces in the name itself. Note that anything after the Time Until Landing will not be included in the call");
                 event.getChannel().sendMessage(error.build()).queue();
             }
@@ -120,7 +125,7 @@ public class Incoming extends ListenerAdapter {
                 EmbedBuilder error = new EmbedBuilder();
                 error.setColor(0xf70505);
                 error.setTitle("Incorrect Syntax");
-                error.setDescription("~incoming [Player_Name] [Time Until Landing] [Optional Notes] - Only a players in-game name will work." +
+                error.setDescription("~incoming [Player_Name] [Time Until Landing] [Optional Notes] " +
                         " Make sure to remove any spaces in the name itself.");
                 event.getChannel().sendMessage(error.build()).queue();
             }

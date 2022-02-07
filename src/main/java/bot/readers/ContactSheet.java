@@ -23,10 +23,12 @@ public class ContactSheet {
     private static final String APPLICATION_NAME = dotenv.get("APPLICATION_NAME");
     private static final String SPREADSHEET_ID = dotenv.get("SPREADSHEET_ID");
 
-    private static Credential authorize() throws IOException, GeneralSecurityException {
+    public static Credential authorize() throws IOException, GeneralSecurityException {
         InputStream in = LootSheet.class.getResourceAsStream("/credentials.json");
+        assert in != null;
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
                 JacksonFactory.getDefaultInstance(),new InputStreamReader(in));
+
 
         List<String> scopes = Collections.singletonList(SheetsScopes.SPREADSHEETS);
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -34,13 +36,16 @@ public class ContactSheet {
                 clientSecrets,scopes)
                 .setDataStoreFactory(new FileDataStoreFactory(new File("tokens")))
                 .setAccessType("offline")
+                .setApprovalPrompt("force")
                 .build();
         return new AuthorizationCodeInstalledApp(
                 flow,new LocalServerReceiver())
-                .authorize(("user"));
+                .authorize("User");
     }
-    private static Sheets getSheetsService() throws IOException, GeneralSecurityException {
+    public static Sheets getSheetsService() throws IOException, GeneralSecurityException {
         Credential credential = authorize();
+        credential.setExpirationTimeMilliseconds(999999999999999999L);
+        System.err.println(credential.getExpiresInSeconds());
         return new Sheets.Builder(GoogleNetHttpTransport.newTrustedTransport(),
                 JacksonFactory.getDefaultInstance(),credential)
                 .setApplicationName(APPLICATION_NAME)
@@ -48,7 +53,7 @@ public class ContactSheet {
     }
     public static void main(String[] args) throws IOException, GeneralSecurityException {
         Sheets sheetsService = getSheetsService();
-        String range = "Sheet1!A2:B70";
+        String range = "Sheet1!A2:B150";
         File file = new File("contacts.txt");
         PrintStream contacts = new PrintStream(file);
 
@@ -75,6 +80,7 @@ public class ContactSheet {
                 String number = row.get(1).toString();
                 contacts.printf("%s %s%n", k, number);
             }
+            System.err.println(authorize().getExpiresInSeconds());
         }
     }
 
