@@ -28,15 +28,19 @@ public class Incoming extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         String[] args = event.getMessage().getContentRaw().split("\\s+");
         ArrayList<Contacts> contacts = new ArrayList<>();
-        boolean exists =false;
+        boolean exists = false;
 
+        // If a good call
         if (args[0].equalsIgnoreCase(Bot.prefix + "incoming") && args.length >=3) {
             StringBuilder concat= new StringBuilder();
+
             for(int i=2;i<args.length;i++)
                 concat.append(args[i]).append(" ");
+
             String BODY = "DreamBot: incoming,  "+ concat;
             readFile(contacts);
 
+            //While the command didn't contain "call"
             if(!args[1].equalsIgnoreCase("call")){
 
                 for (Contacts contact : contacts) {
@@ -50,14 +54,8 @@ public class Incoming extends ListenerAdapter {
                         event.getChannel().sendMessage("SMS sent to " + contact.getName()).queue();
                     }
                 }
-                if(args[1].equalsIgnoreCase("AbbyStrong")) {
-                    Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-                    Message.creator(
-                            new PhoneNumber("+15086815556"),
-                            new PhoneNumber(TWILIO_NUMBER), BODY).create();
-                }
 
-                if (exists==false){
+                if (!exists){
                     EmbedBuilder notFound = new EmbedBuilder();
                     notFound.setTitle("Player Not Found");
                     notFound.setDescription("There is no number associated with the player: "+args[1]);
@@ -82,7 +80,7 @@ public class Incoming extends ListenerAdapter {
                         event.getChannel().sendMessage("Calling " + contacts1.getName()).queue();
                     }
                 }
-                if (exists==false){
+                if (!exists){
                     EmbedBuilder notFound = new EmbedBuilder();
                     notFound.setTitle("Player Not Found");
                     notFound.setDescription("There is no number associated with the player: "+args[2]);

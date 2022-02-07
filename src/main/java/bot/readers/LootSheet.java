@@ -45,6 +45,8 @@ public class LootSheet {
     }
     public static Sheets getSheetsService() throws IOException, GeneralSecurityException {
         Credential credential = authorize();
+        credential.setExpirationTimeMilliseconds(999999999999999999L);
+        System.err.println(credential.getExpiresInSeconds());
         return new Sheets.Builder(GoogleNetHttpTransport.newTrustedTransport(),
                 JacksonFactory.getDefaultInstance(),credential)
                 .setApplicationName(APPLICATION_NAME)
