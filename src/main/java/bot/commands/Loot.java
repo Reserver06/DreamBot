@@ -13,8 +13,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO: Fix Average calculations
-
 public class Loot extends ListenerAdapter {
     private final DecimalFormat f = new DecimalFormat("###,###,###");
     private Map<String,Player> members = new HashMap<>();
@@ -24,31 +22,40 @@ public class Loot extends ListenerAdapter {
         String[] args = event.getMessage().getContentRaw().split("\\s+");
 
         if (args[0].equalsIgnoreCase(Bot.prefix + "loot")) {
-
-            readData();
-
             try {
+                args[1] = args[1].toLowerCase();
+                readData(args);
                 lootTotal(args,event);
             } catch (IOException | GeneralSecurityException e) {
                 e.printStackTrace();
+            } catch (IndexOutOfBoundsException e) {
+                EmbedBuilder error = new EmbedBuilder();
+                error.setColor(0xf70505);
+                error.setTitle("Incorrect Usage");
+                error.setDescription("~loot [name of player] -- Both in-game names and @'ing will work.");
+                event.getChannel().sendMessage(error.build()).queue();
             }
             members.clear();
         }
     }
 
     //Database reader
-    private void readData() {
+    private void readData(String[] args) {
         Database data = new Database();
-        members = data.readData(members);
+        if(args[1].startsWith("<@!"))
+            members = data.readData(members,true);
+        else{
+            members = data.readData(members,false);
+        }
     }
 
     //Sends embedded message of loot total
     private void lootTotal(String [] args,GuildMessageReceivedEvent event) throws IOException, GeneralSecurityException {
-        if(args.length>1 && checkLoot(args)>-1) {
+        if(checkLoot(args)) {
             EmbedBuilder loot = new EmbedBuilder();
-            loot.setTitle("Loot stats for "+ args[1]);
-            loot.addField("Weekly Loot: ", f.format(checkLoot(args)),false);
-//            loot.addField("Overall Average: ",f.format(memberAverage(args[1])),false);
+            loot.setTitle("Loot stats for "+ members.get(args[1]).getName());
+            loot.addField("Weekly Loot: ", f.format(members.get(args[1]).getLoot()),false);
+            loot.addField("Overall Average: ",f.format(memberAverage(members.get(args[1]))),false);
             loot.setColor(0x00ff08);
 
 
@@ -66,27 +73,12 @@ public class Loot extends ListenerAdapter {
 
     }
     //Confirms player and checks loot
-    private long checkLoot(String [] args){
-        for (Player member : members.values()) {
-            if (member.getName().equalsIgnoreCase(args[1]))
-                return member.getLoot();
-        }
-        return -1;
+    private boolean checkLoot(String [] args){
+        return members.get(args[1]) != null;
     }
     //Gets player specific loot average
-//    private static int memberAverage(String name) throws IOException, GeneralSecurityException {
-//        ArrayList<Player> temp = new ArrayList<>();
-//        LootSheetAvg.main(null);
-//        Scanner sc = new Scanner(new File("averages.txt"));
-//        while (sc.hasNext()) {
-//            String aName = sc.next();
-//            int total = sc.nextInt();
-//            temp.add(new Player(aName, total));
-//        }
-//        for(Player k : temp) {
-//            if (k.getName().equalsIgnoreCase(name))
-//                return k.getLoot();
-//        }
-//        return 0;
-//    }
+    private long memberAverage(Player player){
+        Database database = new Database();
+        return database.readAvg(player);
+    }
 }

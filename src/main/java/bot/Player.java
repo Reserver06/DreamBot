@@ -1,7 +1,5 @@
 package bot;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.text.DecimalFormat;
 
 public class Player implements Comparable<Player>{
@@ -10,16 +8,15 @@ public class Player implements Comparable<Player>{
     private final String name;
     private final long phone;
     private final long loot;
-
+    private final String preference;
     private final DecimalFormat f = new DecimalFormat("###,###,###");
 
-    public Player(String discordId,String name,String phone,String loot){
+    public Player(String discordId,String name,String phone,String loot,String preference){
         this.discordId = discordId;
         this.name = name;
-        this.phone = Long.parseLong(phone);
-        this.loot = Long.parseLong(loot);
-
-
+        this.phone = phone!=null? Long.parseLong(phone):0;
+        this.loot = loot!=null? Long.parseLong(loot):0;
+        this.preference = preference;
     }
 
     public String getDiscordId() {
@@ -38,16 +35,20 @@ public class Player implements Comparable<Player>{
         return loot;
     }
 
+    public String getPreference(){
+        return preference;
+    }
+
     @Override
     public String toString() {
         return name +": "+f.format(loot);
     }
 
     @Override
-    public int compareTo(@NotNull Player player) {
+    public int compareTo(Player player) {
         if(this.loot>player.getLoot())
             return -1;
         else
-            return 1;
+            return 0;
     }
 }

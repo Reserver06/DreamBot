@@ -41,7 +41,7 @@ public class LootList extends ListenerAdapter {
     //Database reader
     private void readData() {
         Database data = new Database();
-        members = data.readData(members);
+        members = data.readData(members,false);
     }
     //Returns toString of Player with the highest loot score
     private static String getFirst(Map<String,Player> members){
@@ -73,7 +73,7 @@ public class LootList extends ListenerAdapter {
 
         StringBuilder total = new StringBuilder();
         for (int i=6;i< players.size();i++) {
-            if (players.get(i).getLoot() >= 30000000)
+            if (players.get(i).getLoot() >= 20000000)
                 total.append("<:white_small_square:827279848853733406>").append(players.get(i).toString()).append("\n");
         }
         return total.toString();
